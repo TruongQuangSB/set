@@ -42,7 +42,7 @@ public class FileInfoReader {
 		this.versionService = versionService;
 		this.toolboxFile = toolboxFile;
 		this.nodeFinder = new XMLNodeFinder();
-		nodeFinder.read(toolboxFile);
+		nodeFinder.read(toolboxFile, toolboxFile.getModelPath());
 	}
 
 	/**
