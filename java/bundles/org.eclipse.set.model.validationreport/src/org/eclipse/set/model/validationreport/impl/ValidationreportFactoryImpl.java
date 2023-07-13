@@ -84,6 +84,8 @@ public class ValidationreportFactoryImpl extends EFactoryImpl implements Validat
 				return createValidationSeverityFromString(eDataType, initialValue);
 			case ValidationreportPackage.OBJECT_SCOPE:
 				return createObjectScopeFromString(eDataType, initialValue);
+			case ValidationreportPackage.OBJECT_STATE:
+				return createObjectStateFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -101,6 +103,8 @@ public class ValidationreportFactoryImpl extends EFactoryImpl implements Validat
 				return convertValidationSeverityToString(eDataType, instanceValue);
 			case ValidationreportPackage.OBJECT_SCOPE:
 				return convertObjectScopeToString(eDataType, instanceValue);
+			case ValidationreportPackage.OBJECT_STATE:
+				return convertObjectStateToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -187,6 +191,26 @@ public class ValidationreportFactoryImpl extends EFactoryImpl implements Validat
 	 * @generated
 	 */
 	public String convertObjectScopeToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ObjectState createObjectStateFromString(EDataType eDataType, String initialValue) {
+		ObjectState result = ObjectState.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertObjectStateToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 
