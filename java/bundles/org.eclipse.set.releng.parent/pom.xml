@@ -396,15 +396,15 @@
 	</build>
 
 	<scm>
-		<connection>scm:git:https://github.com/eclipse-set/set</connection>
-		<developerConnection>scm:git:https://github.com/eclipse-set/set</developerConnection>
+		<connection>scm:git:https://github.com/TruongQuangSB/set</connection>
+		<developerConnection>scm:git:https://github.com/TruongQuangSB/set</developerConnection>
 	</scm>
 
 	<distributionManagement>
 		<repository>
 			<id>set-github</id>
 			<name>GitHub Packages</name>
-			<url>https://maven.pkg.github.com/eclipse-set/set</url>
+			<url>https://maven.pkg.github.com/TruongQuangSB/set</url>
 		</repository>
 	</distributionManagement>
 </project>
