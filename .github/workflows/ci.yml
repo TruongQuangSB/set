@@ -123,7 +123,7 @@ jobs:
         id: run-dash
         uses: eclipse-tractusx/sig-infra/.github/actions/run-dash@main
         with:
-          dependencies_file: "../../DEPENDENCIES"
+          dependencies_file: "./DEPENDENCIES"
 
       - name: Publish
         run: mvn -T 1.5C -B deploy --settings .github/settings.xml
