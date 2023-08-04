@@ -71,7 +71,7 @@ jobs:
           retention-days: 1
 
   java:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs:
       - docs
       - textviewer
@@ -117,13 +117,7 @@ jobs:
           path: web/about/dist          
 
       - name: Build
-        run: mvn -T 1.5C -B clean verify --settings .github/settings.xml
-        
-      - name: Dash
-        id: run-dash
-        uses: eclipse-tractusx/sig-infra/.github/actions/run-dash@main
-        with:
-          dependencies_file: "./DEPENDENCIES"
+        run: mvn -T 1.5C -B clean verify --settings .github/settings.xml -Dskip-ui-test=false -Dapplication-under-test='java/bundles/org.eclipse.set.releng.set.product/target/products/SET/win32/win32/x86_64/'
 
       - name: Publish
         run: mvn -T 1.5C -B deploy --settings .github/settings.xml
