@@ -404,7 +404,7 @@
 		<repository>
 			<id>set-github</id>
 			<name>GitHub Packages</name>
-			<url>https://maven.pkg.github.com/TruongQuangSB/set/feature/layout</url>
+			<url>https://maven.pkg.github.com/TruongQuangSB/set</url>
 		</repository>
 	</distributionManagement>
 </project>
