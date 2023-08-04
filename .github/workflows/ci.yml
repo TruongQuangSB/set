@@ -168,7 +168,7 @@ jobs:
       - name: Fetch SET
         uses: actions/download-artifact@v3
         with:
-          name: java-artifact
+          name: eclipse-set-snapshot-${{github.run_number}}
           path: application-under-test
 
       - name: Run Test
