@@ -175,7 +175,7 @@ jobs:
         run: mvn -T 1.5C -B clean verify --settings .github/settings.xml -Dskip-ui-test=false -Dapplication-under-test='${{ github.workspace}}/application-under-test'
 
       - name: Publish Test Result
-        uses: EnricoMi/publish-unit-test-result-action@f0b5d2433f350eff587831d4ad22cb15aab75866 # v2.8
+        uses: EnricoMi/publish-unit-test-result-action/composite@v2
         if: always()
         with:
           files: |
