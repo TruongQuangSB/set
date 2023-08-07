@@ -29,15 +29,15 @@ import org.junit.jupiter.params.provider.MethodSource;
  *
  */
 class FixedColumnTest extends AbstractTableTest {
-	private FreezeLayer freezeLayer;
-
 	@SuppressWarnings("boxing")
-	private Stream<Arguments> getPtTableToTestFixedColumn() {
+	private static Stream<Arguments> getPtTableToTestFixedColumn() {
 		return PtTable.tablesToTest.stream()
 				.filter(table -> table.fixedColumns().size() > 1
 						|| table.fixedColumns().get(0) != 0)
 				.map(table -> Arguments.of(table));
 	}
+
+	private FreezeLayer freezeLayer;
 
 	private void thenExistFixedColumn() {
 		final NatTable natTable = nattableBot.widget;
