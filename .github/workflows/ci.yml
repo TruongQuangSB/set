@@ -172,8 +172,8 @@ jobs:
           path: application-under-test
 
       - name: Run Test
-        run: mvn -T 1.5C -B clean verify --settings ${{ github.workspace }}/.github/settings.xml -Dskip-ui-test=false -Dapplication-under-test='${{ github.workspace}}\application-under-test'
-        working-directory: java-test
+        run: mvn -T 1.5C -B clean verify --settings ${{ github.workspace }}/.github/settings.xml -Dskip-ui-test=false -Dapplication-under-test='${{ github.workspace}}/application-under-test'
+        working-directory: java-test/org.eclipse.set.swtbot.parent
         
       - name: Publish Test Result
         uses: EnricoMi/publish-unit-test-result-action/composite@v2
