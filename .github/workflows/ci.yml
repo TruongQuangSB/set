@@ -176,9 +176,10 @@ jobs:
         working-directory: java-test/org.eclipse.set.swtbot.parent
         
       - name: Publish Test Result
-        uses: EnricoMi/publish-unit-test-result-action/composite@v2
+        uses: dorny/test-reporter@v1
         if: always()
         with:
-          files: |
-            ${{ github.workspace }}/**/surefire-reports/*.xml
+          name: SWTBot Result
+          path: ${{ github.workspace }}/**/surefire-reports/*.xml
+          reporter: java-junit
 
