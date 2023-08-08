@@ -1,9 +1,6 @@
 name: SWTBot Test
 
-on:
-  workflow_run:
-    workflows: ["Build model"]
-    types: [requested]
+on: workflow_dispatch
 
 env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
