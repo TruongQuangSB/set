@@ -36,7 +36,9 @@ jobs:
           workflow: ci.yml
           workflow_conclusion: success
           branch: main
-          name: eclipse-set-snapshot-37
+          name: eclipse-set-snapshot-*
+          name_is_regexp: true
+          search_artifacts: true
           path: application-under-test
 
       - name: Run Test
