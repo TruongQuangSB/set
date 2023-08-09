@@ -36,8 +36,7 @@ jobs:
           workflow: Build model
           workflow_conclusion: success
           branch: main
-          name: eclipse-set-snapshot-*
-          name_is_regexp: true
+          name: eclipse-set-snapshot-37
           path: application-under-test
 
       - name: Run Test
