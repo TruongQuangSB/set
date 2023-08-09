@@ -1,6 +1,10 @@
 name: SWTBot Test
 
-on: workflow_dispatch
+on: 
+  workflow_run:
+    workflows: ["Build model"]
+    types:
+      - completed
 
 env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -35,14 +39,14 @@ jobs:
         with:
           workflow: ci.yml
           workflow_conclusion: success
-          branch: main
-          name: eclipse-set-snapshot-*
+          branch: ${{github.ref}}
+          name: eclipse-set-snapshot-${{github.event.workflow_run.run_number}}
           name_is_regexp: true
           search_artifacts: true
           path: application-under-test
 
       - name: Run Test
-        run: mvn -T 1.5C -U -B clean verify --settings ${{ github.workspace }}/.github/settings.xml -Dapplication-version="2.0.0" -Dapplication-under-test='${{ github.workspace}}/application-under-test/'
+        run: mvn -T 1.5C -U -B clean verify --settings ${{ github.workspace }}/.github/settings.xml -Dapplication-version="2.0.0" -Dapplication-under-test='${{ github.workspace}}/application-under-test/eclipse-set-snapshot-${{github.event.workflow_run.run_number}}/'
         working-directory: java-test/org.eclipse.set.swtbot.parent
         
       - name: Publish Test Result
