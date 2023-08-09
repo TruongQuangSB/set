@@ -35,8 +35,8 @@ jobs:
         with:
           workflow: Build model
           workflow_conclusion: success
-          branch: ${{github.ref}}
-          name: startsWith('eclipse-set-snapshot')
+          branch: main
+          name: eclipse-set-snapshot-*
           name_is_regexp: true
           path: application-under-test
 
