@@ -33,7 +33,7 @@ jobs:
       - name: Fetch SET
         uses: dawidd6/action-download-artifact@v2
         with:
-          workflow: Build model
+          workflow: ci.yml
           workflow_conclusion: success
           branch: main
           name: eclipse-set-snapshot-37
