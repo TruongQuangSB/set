@@ -58,6 +58,10 @@ class TOPKanteMetaData {
 	def TOP_Knoten getTopNodeB() {
 		return topNodeB
 	}
+	
+	def List<TOP_Knoten> getTopNodes() {
+		return topEdge.TOPKnoten
+	}
 
 	def TOP_Knoten getNextTopNode(TOP_Knoten topNode) {
 		if (topNode !== topNodeA && topNode !== topNodeB) {

@@ -40,4 +40,17 @@ class MapExtensions {
 		}
 		return value
 	}
+	
+	def static <T, U> Map<T,U> clone(Map<T,U> map) {
+		val result = newHashMap
+		result.putAll(map)
+		return result
+	}
+	
+		def static <T, U> Map<T,U> cloneLinkedHashMap(Map<T,U> map) {
+		val result = newLinkedHashMap
+		result.putAll(map)
+		return result
+	}
+	
 }

@@ -12,6 +12,7 @@ import java.util.ArrayList
 import java.util.List
 import java.util.Map
 import org.eclipse.set.core.services.Services
+import org.eclipse.set.model.siteplan.Position
 import org.eclipse.set.ppmodel.extensions.container.MultiContainer_AttributeGroup
 import org.eclipse.set.toolboxmodel.Geodaten.TOP_Kante
 import org.eclipse.set.toolboxmodel.Geodaten.TOP_Knoten
@@ -81,7 +82,7 @@ class TrackServiceImpl implements TrackService {
 	override setupTrackNetz(MultiContainer_AttributeGroup container) {
 		val md = container.TOPKante.get(0).TOPKanteMetaData
 		md.defineTrack
-
+		md.defineTrackLvl
 		container.setupAnotherTrackNetz
 	}
 
@@ -104,8 +105,10 @@ class TrackServiceImpl implements TrackService {
 		if (tracksCache.size < clone.size) {
 			tracksCache = new ArrayList
 			tracksCache.addAll(clone)
+			return
 		}
-		container.setupAnotherTrackNetz
+		
+		md.defineTrackLvl
 	}
 
 	private def OverviewplanTrack defineTrack(TOPKanteMetaData md) {
@@ -116,8 +119,6 @@ class TrackServiceImpl implements TrackService {
 
 		track = new OverviewplanTrack(md)
 		tracksCache.add(track)
-		track.getNextTopEdge(md, md.topNodeA)
-		track.getNextTopEdge(md, md.topNodeB)
 
 		track.defineTrackSide(md, md.topNodeA)
 		track.defineTrackSide(md, md.topNodeB)
@@ -132,13 +133,15 @@ class TrackServiceImpl implements TrackService {
 		]
 		val leftSide = md.getLeftEdgeAt(topNode)
 		leftSide?.forEach [ leftIntersect |
-			val lefTrack = leftIntersect.defineTrack
-			track.leftTracks.put(topNode, lefTrack)
+			val leftTrack = leftIntersect.defineTrack
+			leftTrack.rightTracks.put(topNode, track)
+			track.leftTracks.put(topNode, leftTrack)
 		]
 
 		val rightSide = md.getRightEdgeAt(topNode)
 		rightSide?.forEach [ rightIntersect |
 			val rightTrack = rightIntersect.defineTrack
+			rightTrack.leftTracks.put(topNode, track)
 			track.rightTracks.put(topNode, rightTrack)
 		]
 
@@ -149,17 +152,44 @@ class TrackServiceImpl implements TrackService {
 		}
 	}
 
-	private def void getNextTopEdge(OverviewplanTrack track,
-		TOPKanteMetaData md, TOP_Knoten topNode) {
-		if (md === null) {
-			return
-		}
-
-		val continuous = md.getContinuousEdgeAt(topNode)
-		if (continuous === null || track.topEdges.contains(continuous)) {
-			return
-		}
-		track.addTrackSections(continuous)
-		track.getNextTopEdge(continuous, continuous.getNextTopNode(topNode))
+	private def void defineTrackLvl(TOPKanteMetaData md) {
+		val track = tracksCache.findFirst[topEdges.contains(md)]
+		track.lvl = 0
+		val path = newLinkedList(track)
+		track.defineTrackLvl(path, true)
+		track.defineTrackLvl(path, false)
 	}
+
+	private def void defineTrackLvl(OverviewplanTrack source,
+		List<OverviewplanTrack> path, boolean isLeftSide) {
+		val sideTracks = isLeftSide ? source.leftTracks : source.rightTracks
+		sideTracks.values.forEach [
+			if (path.contains(it)) {
+				return
+			}
+			if (isLeftSide && source.lvl + 1 > it.lvl) {
+				it.lvl = source.lvl + 1;
+			} else if (!isLeftSide && source.lvl - 1 < it.lvl) {
+				it.lvl = source.lvl - 1;
+			}
+			val clone = newLinkedList
+			clone.addAll(path)
+			clone.add(it)
+
+			it.defineTrackLvl(clone, isLeftSide)
+			it.defineTrackLvl(clone, !isLeftSide)
+		]
+
+	}
+
+	override getTOPKnotenPosition(TOP_Knoten topNode) {
+		throw new UnsupportedOperationException(
+			"TODO: auto-generated method stub")
+	}
+
+	override setTOPKnotenPosition(TOP_Knoten toNode, Position position) {
+		throw new UnsupportedOperationException(
+			"TODO: auto-generated method stub")
+	}
+
 }

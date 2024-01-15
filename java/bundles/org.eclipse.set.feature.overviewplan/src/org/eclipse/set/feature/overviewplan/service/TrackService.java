@@ -10,6 +10,7 @@ package org.eclipse.set.feature.overviewplan.service;
 
 import java.util.List;
 
+import org.eclipse.set.model.siteplan.Position;
 import org.eclipse.set.ppmodel.extensions.container.MultiContainer_AttributeGroup;
 import org.eclipse.set.toolboxmodel.Geodaten.TOP_Kante;
 import org.eclipse.set.toolboxmodel.Geodaten.TOP_Knoten;
@@ -50,5 +51,9 @@ public interface TrackService {
 	 * @return list of track
 	 */
 	List<OverviewplanTrack> getTracksCache();
+
+	Position getTOPKnotenPosition(TOP_Knoten topNode);
+
+	void setTOPKnotenPosition(TOP_Knoten toNode, Position position);
 
 }
