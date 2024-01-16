@@ -24,6 +24,7 @@ import org.eclipse.set.model.siteplan.Position
 import org.eclipse.set.feature.overviewplan.service.OverviewplanTrack
 import java.util.Map
 import org.eclipse.set.toolboxmodel.Geodaten.ENUMTOPAnschluss
+import java.util.List
 
 @Component(service=Transformator)
 class TrackTransformator extends BaseTransformator<TOP_Kante> {
@@ -31,7 +32,7 @@ class TrackTransformator extends BaseTransformator<TOP_Kante> {
 	@Reference
 	TrackService trackService
 	Map<OverviewplanTrack, Track> mdToTrack = newHashMap
-	Map<TOP_Knoten, Double> topNodeHorizontalCoor = newHashMap
+	Map<String, Double> topNodeHorizontalCoor = newHashMap
 
 	override transform(TOP_Kante topKante) {
 		if (topKante.alreadyTransform) {
@@ -41,87 +42,108 @@ class TrackTransformator extends BaseTransformator<TOP_Kante> {
 		val metadataTrack = trackService.tracksCache.findFirst [
 			topEdges.contains(md)
 		]
-		topNodeHorizontalCoor.put(md.topNodeA, 0.0)
-		metadataTrack.transformTrack(md, md.topNodeA,
-			createPosition(0, metadataTrack.lvl), true)
+		
+		md.transformTrack(null, null, true)
 		println("TEST")
 	}
 
-	private def void transformTrack(OverviewplanTrack mdTrack,
-		TOPKanteMetaData md, TOP_Knoten topNode, Position pos,
-		boolean isForward) {
+	private def void transformTrack(TOPKanteMetaData md, TOP_Knoten topNode,
+		Position pos, boolean isForward) {
+		val mdTrack = trackService.tracksCache.findFirst[topEdges.contains(md)]
+		if (mdTrack === null) {
+			throw new IllegalArgumentException('''Es gibt keine Track enthält TOP_Kante: «md.topEdge.identitaet.wert»''')
+		}
+
 		var track = mdToTrack.get(mdTrack)
-		if (track !== null) {
+		if (track === null) {
+			track = SiteplanFactory.eINSTANCE.createTrack
+			track.guid = '''«state.tracks.size + 1»'''
+			mdToTrack.put(mdTrack, track)
+			state.tracks.add(track)
+		}
+
+		if (topNode === null) {
+			val posA = createPosition(0, mdTrack.lvl)
+			val posB = createPosition(-1, mdTrack.lvl)
+			topNodeHorizontalCoor.put(md.topNodeA.identitaet.wert, 0.0)
+			topNodeHorizontalCoor.put(md.topNodeB.identitaet.wert, -1.0)
+			md.transformSection(track, md.topNodeA, posA, true)
+			md.transformSection(track, md.topNodeB, posB, false)
 			return
 		}
 
-		track = SiteplanFactory.eINSTANCE.createTrack
-		track.guid = '''«state.tracks.size + 1»'''
-		mdToTrack.put(mdTrack, track)
-		state.tracks.add(track)
-		val section = SiteplanFactory.eINSTANCE.createTrackSection
-		section.guid = md.topEdge.identitaet.wert
-
-		val topNodeA = topNode
-		val segmentA = SiteplanFactory.eINSTANCE.createTrackSegment
-		segmentA.guid = topNodeA.identitaet.wert
-		segmentA.positions.add(pos)
-		md.transformSection(track, topNodeA, pos, isForward)
-		val topNodeB = md.getNextTopNode(topNode)
-		val segmentB = SiteplanFactory.eINSTANCE.createTrackSegment
-		segmentB.guid = topNodeB.identitaet.wert
-		segmentB.positions.add(createPosition(pos.x + (!isForward ? 1 : -1), pos.y))
-		section.segments.add(segmentA)
-		section.segments.add(segmentB)
-		track.sections.add(section)
-
-		md.transformSection(track, topNodeB, createPosition(pos.x + (!isForward ? 1 : -1), pos.y),
-			!isForward)
+		val section = track.sections.findFirst [
+			guid === md.topEdge.identitaet.wert
+		]
+		if (section?.segments?.findFirst[guid === topNode.identitaet.wert] !==
+			null) {
+			return
+		}
+//
+//		val nodeA = topNode
+//		md.transformSection(track, nodeA, createPosition(pos.x, mdTrack.lvl),
+//			!isForward)
+		val nodeB = md.getNextTopNode(topNode)
+		if (section?.segments?.findFirst[guid === nodeB.identitaet.wert] !==
+			null) {
+			return
+		}
+		md.transformSection(track, nodeB,
+			createPosition(pos.x + (isForward ? 1 : -1), mdTrack.lvl),
+			isForward)
 	}
 
 	private def void transformSection(TOPKanteMetaData md, Track track,
 		TOP_Knoten topNode, Position pos, boolean isForward) {
+		var section = track.sections.findFirst [
+			guid === md.topEdge.identitaet.wert
+		]
+		if (section === null) {
+			section = SiteplanFactory.eINSTANCE.createTrackSection
+			section.guid = md.topEdge.identitaet.wert
+			track.sections.add(section)
+		}
+
+		if (section.segments.exists[guid === topNode.identitaet.wert]) {
+			return
+		}
+		val segment = SiteplanFactory.eINSTANCE.createTrackSegment
+		segment.guid = topNode.identitaet.wert
+		if (topNodeHorizontalCoor.containsKey(topNode.identitaet.wert)) {
+			segment.positions.add(createPosition(topNodeHorizontalCoor.get(topNode.identitaet.wert), pos.y))
+		} else {
+			segment.positions.add(pos)
+			topNodeHorizontalCoor.put(topNode.identitaet.wert, pos.x)	
+		}		
+		section.segments.add(segment)
+
 		val leftSide = md.getLeftEdgeAt(topNode)
 		leftSide?.forEach [ leftIntersect |
-			val intersectTrack = trackService.tracksCache.findFirst [
-				topEdges.contains(leftIntersect)
-			]
-			intersectTrack.transformTrack(leftIntersect, topNode,
-				createPosition(pos.x, intersectTrack.lvl),
-				topNode.isSameDirection(md,
-					leftIntersect) ? isForward : !isForward)
+			if (topNode.isSameDirection(md, leftIntersect)) {
+				leftIntersect.transformTrack(topNode, pos, isForward)
+			}
+//			leftIntersect.transformTrack(topNode, pos,
+//				topNode.isSameDirection(md,
+//					leftIntersect) ? isForward : !isForward)
 		]
 
 		val rightSide = md.getRightEdgeAt(topNode)
 		rightSide?.forEach [ rightIntersect |
-			val intersectTrack = trackService.tracksCache.findFirst [
-				topEdges.contains(rightIntersect)
-			]
-			intersectTrack.transformTrack(rightIntersect, topNode,
-				createPosition(pos.x, intersectTrack.lvl),
-				topNode.isSameDirection(md,
-					rightIntersect) ? isForward : !isForward)
+			if (topNode.isSameDirection(md, rightIntersect)) {
+				rightIntersect.transformTrack(topNode, pos, isForward)
+			}
+//			rightIntersect.transformTrack(topNode, pos,
+//				topNode.isSameDirection(md,
+//					rightIntersect) ? isForward : !isForward)
 		]
 		val continuous = md.getContinuousEdgeAt(topNode)
-		if (continuous === null) {
+		if (continuous === null || track.sections.exists [
+			guid === continuous.topEdge.identitaet.wert
+		]) {
 			return
 		}
-		val section = SiteplanFactory.eINSTANCE.createTrackSection
-		section.guid = continuous.topEdge.identitaet.wert
-		val segmentA = SiteplanFactory.eINSTANCE.createTrackSegment
-		segmentA.guid = topNode.identitaet.wert
-		segmentA.positions.add(pos)
 
-		val topNodeB = continuous.getNextTopNode(topNode)
-		val segmentB = SiteplanFactory.eINSTANCE.createTrackSegment
-		segmentB.guid = topNodeB.identitaet.wert
-		segmentB.positions.add(
-			createPosition(pos.x + (isForward ? 1 : -1), pos.y))
-		section.segments.add(segmentA)
-		section.segments.add(segmentB)
-		track.sections.add(section)
-
-		continuous.transformSection(track, topNodeB,
+		continuous.transformSection(track, continuous.getNextTopNode(topNode),
 			createPosition(pos.x + (isForward ? 1 : -1), pos.y), isForward)
 	}
 
@@ -159,12 +181,12 @@ class TrackTransformator extends BaseTransformator<TOP_Kante> {
 		return section
 	}
 
-	private def TrackSegment createTrackSegment(TrackSection section,
-		TOP_Knoten node, double x, double y) {
+	private def TrackSegment createTrackSegment(TOP_Knoten node, double x,
+		double y) {
 		val segment = SiteplanFactory.eINSTANCE.createTrackSegment
+		segment.guid = node.identitaet.wert
 		val position = createPosition(x, y)
 		segment.positions.add(position)
-		section.segments.add(segment)
 		return segment
 	}
 

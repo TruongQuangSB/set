@@ -191,5 +191,9 @@ class TrackServiceImpl implements TrackService {
 		throw new UnsupportedOperationException(
 			"TODO: auto-generated method stub")
 	}
+	
+	override getTrack(TOPKanteMetaData md) {
+		return tracksCache.findFirst[topEdges.contains(md)]
+	}
 
 }

@@ -56,4 +56,10 @@ public interface TrackService {
 
 	void setTOPKnotenPosition(TOP_Knoten toNode, Position position);
 
+	/**
+	 * @param md
+	 * @return
+	 */
+	OverviewplanTrack getTrack(TOPKanteMetaData md);
+
 }
