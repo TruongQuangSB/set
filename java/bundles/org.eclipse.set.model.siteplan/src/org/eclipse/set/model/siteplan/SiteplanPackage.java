@@ -1206,13 +1206,22 @@ public interface SiteplanPackage extends EPackage {
 	int TRACK_SECTION__SEGMENTS = SITEPLAN_OBJECT_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>Color</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TRACK_SECTION__COLOR = SITEPLAN_OBJECT_FEATURE_COUNT + 2;
+
+	/**
 	 * The number of structural features of the '<em>Track Section</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TRACK_SECTION_FEATURE_COUNT = SITEPLAN_OBJECT_FEATURE_COUNT + 2;
+	int TRACK_SECTION_FEATURE_COUNT = SITEPLAN_OBJECT_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>Track Section</em>' class.
@@ -3754,6 +3763,17 @@ public interface SiteplanPackage extends EPackage {
 	EReference getTrackSection_Segments();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.set.model.siteplan.TrackSection#getColor <em>Color</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Color</em>'.
+	 * @see org.eclipse.set.model.siteplan.TrackSection#getColor()
+	 * @see #getTrackSection()
+	 * @generated
+	 */
+	EAttribute getTrackSection_Color();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.set.model.siteplan.TrackSegment <em>Track Segment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5545,6 +5565,14 @@ public interface SiteplanPackage extends EPackage {
 		 * @generated
 		 */
 		EReference TRACK_SECTION__SEGMENTS = eINSTANCE.getTrackSection_Segments();
+
+		/**
+		 * The meta object literal for the '<em><b>Color</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TRACK_SECTION__COLOR = eINSTANCE.getTrackSection_Color();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.set.model.siteplan.impl.TrackSegmentImpl <em>Track Segment</em>}' class.

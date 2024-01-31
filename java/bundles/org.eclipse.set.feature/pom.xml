@@ -104,6 +104,21 @@
 						</configuration>
 					</execution>
 					<execution>
+						<id>copy-siteplan</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/siteplan/web/overviewplan</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/../../../web/overviewplan/dist</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
 						<id>copy-news</id>
 						<phase>prepare-package</phase>
 						<goals>

@@ -37,6 +37,7 @@ import org.eclipse.set.model.siteplan.TrackShape;
  * <ul>
  *   <li>{@link org.eclipse.set.model.siteplan.impl.TrackSectionImpl#getShape <em>Shape</em>}</li>
  *   <li>{@link org.eclipse.set.model.siteplan.impl.TrackSectionImpl#getSegments <em>Segments</em>}</li>
+ *   <li>{@link org.eclipse.set.model.siteplan.impl.TrackSectionImpl#getColor <em>Color</em>}</li>
  * </ul>
  *
  * @generated
@@ -71,6 +72,26 @@ public class TrackSectionImpl extends SiteplanObjectImpl implements TrackSection
 	 * @ordered
 	 */
 	protected EList<TrackSegment> segments;
+
+	/**
+	 * The default value of the '{@link #getColor() <em>Color</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getColor()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String COLOR_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getColor() <em>Color</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getColor()
+	 * @generated
+	 * @ordered
+	 */
+	protected String color = COLOR_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -133,6 +154,29 @@ public class TrackSectionImpl extends SiteplanObjectImpl implements TrackSection
 	 * @generated
 	 */
 	@Override
+	public String getColor() {
+		return color;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setColor(String newColor) {
+		String oldColor = color;
+		color = newColor;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SiteplanPackage.TRACK_SECTION__COLOR, oldColor, color));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case SiteplanPackage.TRACK_SECTION__SEGMENTS:
@@ -153,6 +197,8 @@ public class TrackSectionImpl extends SiteplanObjectImpl implements TrackSection
 				return getShape();
 			case SiteplanPackage.TRACK_SECTION__SEGMENTS:
 				return getSegments();
+			case SiteplanPackage.TRACK_SECTION__COLOR:
+				return getColor();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -173,6 +219,9 @@ public class TrackSectionImpl extends SiteplanObjectImpl implements TrackSection
 				getSegments().clear();
 				getSegments().addAll((Collection<? extends TrackSegment>)newValue);
 				return;
+			case SiteplanPackage.TRACK_SECTION__COLOR:
+				setColor((String)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -191,6 +240,9 @@ public class TrackSectionImpl extends SiteplanObjectImpl implements TrackSection
 			case SiteplanPackage.TRACK_SECTION__SEGMENTS:
 				getSegments().clear();
 				return;
+			case SiteplanPackage.TRACK_SECTION__COLOR:
+				setColor(COLOR_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -207,6 +259,8 @@ public class TrackSectionImpl extends SiteplanObjectImpl implements TrackSection
 				return shape != SHAPE_EDEFAULT;
 			case SiteplanPackage.TRACK_SECTION__SEGMENTS:
 				return segments != null && !segments.isEmpty();
+			case SiteplanPackage.TRACK_SECTION__COLOR:
+				return COLOR_EDEFAULT == null ? color != null : !COLOR_EDEFAULT.equals(color);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -223,6 +277,8 @@ public class TrackSectionImpl extends SiteplanObjectImpl implements TrackSection
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (shape: ");
 		result.append(shape);
+		result.append(", color: ");
+		result.append(color);
 		result.append(')');
 		return result.toString();
 	}

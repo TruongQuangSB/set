@@ -6,7 +6,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  */
-package org.eclipse.set.feature.overviewplan.service
+package org.eclipse.set.feature.overviewplan.track
 
 import java.util.Collections
 import java.util.List
@@ -26,6 +26,7 @@ import static extension org.eclipse.set.ppmodel.extensions.TopKnotenExtensions.*
 import static extension org.eclipse.set.ppmodel.extensions.WKrGspElementExtensions.*
 import static extension org.eclipse.set.ppmodel.extensions.WKrGspKomponenteExtensions.*
 import static extension org.eclipse.set.utils.collection.MapExtensions.*
+import java.util.Optional
 
 class TOPKanteMetaData {
 	TOP_Kante topEdge
@@ -35,8 +36,10 @@ class TOPKanteMetaData {
 	Map<TOP_Knoten, TOPKanteMetaData> continuousTopEdge = newHashMap
 	Map<TOP_Knoten, List<TOPKanteMetaData>> leftTopEdge = newHashMap
 	Map<TOP_Knoten, List<TOPKanteMetaData>> rightTopEdge = newHashMap
-	Map<TOP_Knoten, Boolean> changeLeftRightNode = newHashMap
+	public Map<TOP_Knoten, Boolean> changeLeftRightNode = newHashMap
 	TrackService trackService
+	Optional<Integer> length
+	TOPKanteConnectPaths connectPaths
 
 	new(TOP_Kante topKante, TrackService trackService) {
 		this.topEdge = topKante
@@ -45,6 +48,7 @@ class TOPKanteMetaData {
 		topNodeB = topKante?.IDTOPKnotenB
 		changeLeftRightNode.put(topNodeA, false)
 		changeLeftRightNode.put(topNodeB, isChangeLeftRightEdge ? true : false)
+		length = Optional.empty
 	}
 
 	def TOP_Kante getTopEdge() {
@@ -61,6 +65,25 @@ class TOPKanteMetaData {
 	
 	def List<TOP_Knoten> getTopNodes() {
 		return topEdge.TOPKnoten
+	}
+	
+	def TOPKanteConnectPaths getTOPKanteConnectPaths() {
+		if (connectPaths === null) {
+			connectPaths = new TOPKanteConnectPaths(this)
+		}
+		return connectPaths
+	}
+	
+	def int getLength() {
+		return alreadyRegistedLenght ? length.get.intValue : 1
+	}
+	
+	def void setLength(int value) {
+		length = Optional.of(value)
+	}
+	
+	def boolean alreadyRegistedLenght() {
+		return length.present
 	}
 
 	def TOP_Knoten getNextTopNode(TOP_Knoten topNode) {

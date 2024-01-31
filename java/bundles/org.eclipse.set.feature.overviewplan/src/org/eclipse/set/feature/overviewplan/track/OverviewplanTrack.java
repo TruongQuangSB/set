@@ -1,13 +1,14 @@
 /**
- * Copyright (c) 2023 DB Netz AG and others.
+ * Copyright (c) {year} DB InfraGO AG and others
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v20.html
+ * This program and the accompanying materials are made available under the 
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0  
  */
 
-package org.eclipse.set.feature.overviewplan.service;
+package org.eclipse.set.feature.overviewplan.track;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -35,6 +36,11 @@ public class OverviewplanTrack {
 	 * Track Lvl
 	 */
 	public int lvl;
+
+	/**
+	 * First found out track will fixed
+	 */
+	public boolean fixedLvl = false;
 	/**
 	 * Right intersect track
 	 */
@@ -74,8 +80,14 @@ public class OverviewplanTrack {
 			return topNodes;
 		}
 		final TOPKanteMetaData first = topEdges.get(0);
-		final Pair<TOP_Knoten, TOPKanteMetaData> pair = first
-				.getContinuousEdges().get(0);
+		final List<Pair<TOP_Knoten, TOPKanteMetaData>> continuousEdges = first
+				.getContinuousEdges();
+		if (continuousEdges.isEmpty()) {
+			topNodes.add(first.getTopNodeA());
+			topNodes.add(first.getTopNodeB());
+			return topNodes;
+		}
+		final Pair<TOP_Knoten, TOPKanteMetaData> pair = continuousEdges.get(0);
 		TOP_Knoten connectNode = pair.getKey();
 		topNodes.add(first.getNextTopNode(connectNode));
 		TOPKanteMetaData continuous = pair.getValue();
@@ -100,7 +112,6 @@ public class OverviewplanTrack {
 		if (md == null) {
 			return;
 		}
-
 		final TOPKanteMetaData continuous = md.getContinuousEdgeAt(topNode);
 		if (continuous == null || topEdges.contains(continuous)) {
 			return;

@@ -1,17 +1,18 @@
 /**
- * Copyright (c) 2023 DB Netz AG and others.
- * 
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v20.html
+ * Copyright (c) {year} DB InfraGO AG and others
+ *
+ * This program and the accompanying materials are made available under the 
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0  
  */
 package org.eclipse.set.feature.overviewplan.transformator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.set.feature.overviewplan.service.TrackService;
+import org.eclipse.set.feature.overviewplan.track.TrackService;
 import org.eclipse.set.feature.siteplan.transform.AbstractSiteplanTransformator;
 import org.eclipse.set.feature.siteplan.transform.Transformator;
 import org.eclipse.set.model.siteplan.Position;
@@ -46,6 +47,7 @@ public class OverviewplanTransformatorImpl extends AbstractSiteplanTransformator
 	@Override
 	public SiteplanState transformState(
 			final MultiContainer_AttributeGroup container) {
+		trackService.clean();
 		trackService.setupTrackNetz(container);
 		final SiteplanState siteplanState = SiteplanFactory.eINSTANCE
 				.createSiteplanState();
@@ -58,7 +60,10 @@ public class OverviewplanTransformatorImpl extends AbstractSiteplanTransformator
 	public Position getLeadingPosition(
 			final PlanPro_Schnittstelle schnittstelle,
 			final MultiContainer_AttributeGroup container) {
-		return null;
+		final Position position = SiteplanFactory.eINSTANCE.createPosition();
+		position.setX(0);
+		position.setY(0);
+		return position;
 	}
 
 	// This need for UnitTest

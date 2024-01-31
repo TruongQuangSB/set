@@ -6,11 +6,10 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  */
-package org.eclipse.set.feature.overviewplan.service;
+package org.eclipse.set.feature.overviewplan.track;
 
 import java.util.List;
 
-import org.eclipse.set.model.siteplan.Position;
 import org.eclipse.set.ppmodel.extensions.container.MultiContainer_AttributeGroup;
 import org.eclipse.set.toolboxmodel.Geodaten.TOP_Kante;
 import org.eclipse.set.toolboxmodel.Geodaten.TOP_Knoten;
@@ -43,6 +42,12 @@ public interface TrackService {
 			String guid);
 
 	/**
+	 * @param guid
+	 * @return
+	 */
+	TOPKanteMetaData getTOPKanteMetaData(String guid);
+
+	/**
 	 * @param container
 	 */
 	void setupTrackNetz(MultiContainer_AttributeGroup container);
@@ -52,14 +57,20 @@ public interface TrackService {
 	 */
 	List<OverviewplanTrack> getTracksCache();
 
-	Position getTOPKnotenPosition(TOP_Knoten topNode);
-
-	void setTOPKnotenPosition(TOP_Knoten toNode, Position position);
-
 	/**
 	 * @param md
 	 * @return
 	 */
 	OverviewplanTrack getTrack(TOPKanteMetaData md);
 
+	/**
+	 * @param node
+	 * @return
+	 */
+	Double getTOPKnotenHorizontalCoor(TOP_Knoten node);
+
+	/**
+	 * 
+	 */
+	void clean();
 }

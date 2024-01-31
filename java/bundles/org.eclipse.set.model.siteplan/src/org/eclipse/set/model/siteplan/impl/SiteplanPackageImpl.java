@@ -1381,6 +1381,16 @@ public class SiteplanPackageImpl extends EPackageImpl implements SiteplanPackage
 	 * @generated
 	 */
 	@Override
+	public EAttribute getTrackSection_Color() {
+		return (EAttribute)trackSectionEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getTrackSegment() {
 		return trackSegmentEClass;
 	}
@@ -2522,6 +2532,7 @@ public class SiteplanPackageImpl extends EPackageImpl implements SiteplanPackage
 		trackSectionEClass = createEClass(TRACK_SECTION);
 		createEAttribute(trackSectionEClass, TRACK_SECTION__SHAPE);
 		createEReference(trackSectionEClass, TRACK_SECTION__SEGMENTS);
+		createEAttribute(trackSectionEClass, TRACK_SECTION__COLOR);
 
 		trackSegmentEClass = createEClass(TRACK_SEGMENT);
 		createEAttribute(trackSegmentEClass, TRACK_SEGMENT__TYPE);
@@ -2809,6 +2820,7 @@ public class SiteplanPackageImpl extends EPackageImpl implements SiteplanPackage
 		initEClass(trackSectionEClass, TrackSection.class, "TrackSection", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTrackSection_Shape(), this.getTrackShape(), "shape", null, 0, 1, TrackSection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTrackSection_Segments(), this.getTrackSegment(), null, "segments", null, 0, -1, TrackSection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTrackSection_Color(), ecorePackage.getEString(), "color", null, 0, 1, TrackSection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(trackSegmentEClass, TrackSegment.class, "TrackSegment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTrackSegment_Type(), this.getTrackType(), "type", null, 0, -1, TrackSegment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

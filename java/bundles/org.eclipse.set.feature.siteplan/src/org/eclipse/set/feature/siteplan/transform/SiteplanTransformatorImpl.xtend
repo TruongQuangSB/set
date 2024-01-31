@@ -29,6 +29,7 @@ import static extension org.eclipse.set.ppmodel.extensions.PlanProSchnittstelleE
 import static extension org.eclipse.set.ppmodel.extensions.PlanungProjektExtensions.*
 import static extension org.eclipse.set.ppmodel.extensions.StreckeExtensions.*
 import static extension org.eclipse.set.ppmodel.extensions.StreckePunktExtensions.*
+import org.eclipse.set.feature.siteplan.SiteplanConstants
 
 /**
  * Transforms the PlanPro data model into the siteplan data model 
@@ -75,6 +76,13 @@ class SiteplanTransformatorImpl extends AbstractSiteplanTransformator {
 				transformator.transformContainer(it, container)
 			]
 		)
+		tracks.flatMap[sections].indexed.forEach[
+			var color = SiteplanConstants.TOP_KANTEN_COLOR.get(value.guid)
+			if (color === null) {
+				color = '''hsl(«key * 137.5», 100%, 65%)'''
+			}
+			value.color = color
+		]
 	}
 
 	override getLeadingPosition(PlanPro_Schnittstelle planproSchnittstelle,
