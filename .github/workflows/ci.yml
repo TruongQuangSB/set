@@ -201,9 +201,9 @@ jobs:
       - name: Publish
         shell: bash
         run: |
-          deployPath=local::file://${{github.workspace}}/set-m2deploy
+          deployPath="local::file://${{github.workspace}}/set-m2deploy"
           if [ ${{ github.ref }} == 'refs/heads/main' || startsWith(${{ github.ref }}, 'refs/heads/release/') || startsWith(${{ github.ref }}, 'refs/tags/')]; then
-            repoPath=set-github::https://maven.pkg.github.com/${{ github.repository }}
+            repoPath="set-github::https://maven.pkg.github.com/${{ github.repository }}"
           fi
           mvn -T 1.5C -B deploy --settings .github/settings.xml -DaltDeploymentRepository=${{deployPath}}
         env:
