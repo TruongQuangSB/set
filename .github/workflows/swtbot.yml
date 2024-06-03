@@ -33,10 +33,26 @@ jobs:
       - name: Fetch SET
         uses: actions/download-artifact@v4
         with:
-          name: eclipse-set-snapshot-117
+          name: eclipse-set-snapshot-139
           github-token: ${{secrets.GITHUB_TOKEN}}
-          run-id: 9302585621
+          run-id: 9349873630
           path: application-under-test
+
+      - name: Fetch SET-M2
+        uses: actions/download-artifact@v4
+        with:
+          name: set-m2deploy-139 
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          run-id: 9349873630
+          path: deploym2
+
+      - name: Update target platform
+        shell: bash
+        run: |
+          xmlstartlet ed --inplace \
+            -u "project/profiles/profile/repositories/repository[id='set-github']/url" \
+            -v '${{ github.workspace}}/deploym2 \
+            ${github.workspace}}/swtbot-pom.xml
 
       - name: Run Test
         run: mvn -T 1.5C -U -B clean verify --settings ${{ github.workspace }}/.github/settings.xml -Dapplication-version="2.0.0" -Dapplication-under-test='${{ github.workspace}}/application-under-test/'
