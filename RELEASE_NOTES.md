@@ -9,7 +9,7 @@ As first major feature release as part of the Eclipse Foundation, SET 2.0 adds s
 Additionally the following additional features and improvements were completed:
 
 - A component for validating model plausibility and consistency ("PlaZ Modell") was added.
-- Performance and consistency of table exports (PDF/Excel) were improved.
+- Performance and consistency of table exports (PDF/Excel) were improved. 
 - Eclipse Platform has been updated to Eclipse 2022-12.
 - Improved handling of loading incorrect model versions.
 
