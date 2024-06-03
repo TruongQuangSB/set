@@ -197,7 +197,7 @@ jobs:
           path: web/news/public
 
       - name: Build
-        run: mvn -T 1.5C -B clean deploy --settings .github/settings.xml -DaltDeploymentRepository=${{ env.DEPLOY_LOCAL && "local::file://${{ github.workspace }}/set-m2deploy" || "set-github::https://maven.pkg.github.com/${{ github.repository }}" }}
+        run: mvn -T 1.5C -B clean deploy --settings .github/settings.xml -DaltDeploymentRepository=${{ env.DEPLOY_LOCAL && 'local::file://github.workspace/set-m2deploy' || 'set-github::https://maven.pkg.github.com/github.repository' }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
