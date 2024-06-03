@@ -15,6 +15,7 @@ on:
 
 env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  DEPLOY_LOCAL: $ {{ github.ref != 'refs/heads/main' || !startsWith(github.ref, 'refs/heads/release/') || !startsWith(github.ref, 'refs/tags/') }}
 
 jobs:
   docs:
@@ -199,7 +200,7 @@ jobs:
         run: mvn -T 1.5C -B -U clean verify
 
       - name: Publish
-        run: mvn -T 1.5C -B deploy --settings .github/settings.xml -DaltDeploymentRepository=${{ (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/') || startsWith(github.ref, 'refs/tags/')) && 'set-github::https://maven.pkg.github.com/${{ github.repository }}' || 'local::file://${{github.workspace}}/set-m2deploy' }}
+        run: mvn -T 1.5C -B deploy --settings .github/settings.xml -DaltDeploymentRepository=${{ env.DEPLOY_LOCAL && 'local::file://${{github.workspace}}/set-m2deploy' || 'set-github::https://maven.pkg.github.com/${{ github.repository }}' }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
