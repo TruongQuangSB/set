@@ -15,7 +15,7 @@ on:
 
 env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-  SHOULD_DEPLOY_LOCAL: $ {{ github.ref != 'refs/heads/main' || !startsWith(github.ref, 'refs/heads/release/') || !startsWith(github.ref, 'refs/tags/') }}
+  SHOULD_DEPLOY_LOCAL: $ {{ github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/heads/release/') && !startsWith(github.ref, 'refs/tags/') }}
   DEPLOY_LOCAL_DIR: local::file://${{ github.workspace }}/set-m2deploy
   DEPLOY_GITHUB_URL: set-github::https://maven.pkg.github.com/${{ github.repository }}
   
@@ -200,7 +200,7 @@ jobs:
           path: web/news/public
 
       - name: Build
-        run: mvn -T 1.5C -B clean deploy --settings .github/settings.xml -DaltDeploymentRepository=${{ env.DEPLOY_LOCAL && env.DEPLOY_LOCAL_DIR || env.DEPLOY_GITHUB_URL }}
+        run: mvn -T 1.5C -B clean deploy --settings .github/settings.xml -DaltDeploymentRepository=${{ env.SHOULD_DEPLOY_LOCAL && env.DEPLOY_LOCAL_DIR || env.DEPLOY_GITHUB_URL }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
