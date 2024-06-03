@@ -204,6 +204,7 @@ jobs:
             mvn -T 1.5C -B deploy --settings .github/settings.xml -DaltDeploymentRepository=local::file://${{github.workspace}}/set-m2deploy
           else
             mvn -T 1.5C -B deploy --settings .github/settings.xml -DaltDeploymentRepository=set-github::https://maven.pkg.github.com/${{github.repository}}
+          fi
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
