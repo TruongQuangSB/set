@@ -1,16 +1,22 @@
 name: SWTBot Test
 
 on:
-  workflow_call:
-    inputs:
-      runNumber:
-        description: 'Run number of caller workflow'
-        type: string
-        required: true
-      runId:
-        description: 'Run id of caller workflow'
-        type: string
-        required: true
+  # workflow_call:
+  #   inputs:
+  #     runNumber:
+  #       description: 'Run number of caller workflow'
+  #       type: string
+  #       required: true
+  #     runId:
+  #       description: 'Run id of caller workflow'
+  #       type: string
+  #       required: true
+  workflow_run:
+    workflows: [Build SET]
+    types: 
+      - completed
+    
+
     
 
 env:
@@ -21,6 +27,7 @@ env:
 jobs:
   uitest:
     runs-on: windows-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     permissions:
       contents: read
       packages: read
@@ -32,23 +39,23 @@ jobs:
       - name: Fetch SET
         uses: actions/download-artifact@v4
         with:
-          name: eclipse-set-snapshot-${{ inputs.runNumber }}
+          name: eclipse-set-snapshot-${{ github.event.workflow_run.run_number }}
           github-token: ${{secrets.GITHUB_TOKEN}}
-          run-id: ${{ inputs.runId }}
+          run-id: ${{ github.event.workflow_run.id }}
           path: ${{ env.TEST_APPLICATION_DIR }}
 
       - name: Fetch m2 Deploy
         uses: actions/download-artifact@v4
         with:
-          name: set-m2deploy-${{ inputs.runNumber }}
+          name: set-m2deploy-${{ github.event.workflow_run.run_number }}
           github-token: ${{secrets.GITHUB_TOKEN}}
-          run-id: ${{ inputs.runId }}
+          run-id: ${{ github.event.workflow_run.id }}
           path: ${{ env.DEPLOY_DIR }}
 
       - name: Update repo path
         shell: bash
         run: |
-           xmlstartlet ed --inplace \
+           xmlstarlet ed --inplace \
            -u "project/profiles/profile[id='swtbot']/repositories/repository[id='set-github']/url"
            -v file://${{ env.DEPLOY_DIR }}
            ${{ env.SWTBOT_POM }}

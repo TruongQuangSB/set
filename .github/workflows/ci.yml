@@ -244,12 +244,12 @@ jobs:
         uses: github/codeql-action/analyze@v3
         if: github.ref == 'refs/heads/main'
 
-  runSWTBot:
-    needs: java
-    uses: ./.github/workflows/swtbot.yml
-    with:
-          runId: ${{ github.run_id }}
-          runNumber: ${{ github.run_number }}
+  # runSWTBot:
+  #   needs: java
+  #   uses: ./.github/workflows/swtbot.yml
+  #   with:
+  #     runId: ${{ github.run_id }}
+  #     runNumber: ${{ github.run_number }}
         
 
   
