@@ -5,11 +5,11 @@ on:
     inputs:
       runNumber:
         description: 'Run number of caller workflow'
-        type: number
+        type: string
         required: true
       runId:
         description: 'Run id of caller workflow'
-        type: number
+        type: string
         required: true
     
 
