@@ -1,15 +1,23 @@
 name: SWTBot Test
 
 on:
-  workflow_run:
-    workflows: [Build SET]
-    types:
-      - completed
+  workflow_call:
+    inputs:
+      runNumber:
+        description: 'Run number of caller workflow'
+        type: number
+        required: true
+      runId:
+        description: 'Run id of caller workflow'
+        type: number
+        required: true
+    
 
 env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-  IST_DEPLOY_DIR_LOCAL: github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/heads/release/') && !startsWith(github.ref, 'refs/tags/')
-  DEPLOY_DIR_LOCAL: m2deploy
+  DEPLOY_DIR: ${{ github.workspace }}/java-test/m2deploy
+  TEST_APPLICATION_DIR: ${{ github.workspace }}/jave-test/application-under-test
+  SWTBOT_POM: ${{ github.workspace }}/java-test/pom.xml
 jobs:
   uitest:
     runs-on: windows-latest
@@ -26,30 +34,27 @@ jobs:
       - name: Fetch SET
         uses: actions/download-artifact@v4
         with:
-          name: eclipse-set-snapshot-${{ context.payload.workflow_run.run_number}}
+          name: eclipse-set-snapshot-${{ inputs.runNumber }}
           github-token: ${{secrets.GITHUB_TOKEN}}
-          run-id: ${{ context.payload.workflow_run.id }}
-          path: application-under-test
+          run-id: ${{ inputs.runId }}
+          path: ${{ env.TEST_APPLICATION_DIR }}
 
       - name: Fetch m2 Deploy
         uses: actions/download-artifact@v4
-        if: env.IST_DEPLOY_DIR_LOCAL
         with:
-          name: set-m2deploy-${{ context.payload.workflow_run.run_number}}
+          name: set-m2deploy-${{ inputs.runNumber }}
           github-token: ${{secrets.GITHUB_TOKEN}}
-          run-id: ${{ context.payload.workflow_run.id }}
-          path: env.DEPLOY_DIR_LOCAL
+          run-id: ${{ inputs.runId }}
+          path: ${{ env.DEPLOY_DIR }}
 
       - name: Update repo path
-        if: env.IST_DEPLOY_DIR_LOCAL
         shell: bash
         run: |
            xmlstartlet ed --inplace \
            -u "project/profiles/profile[id='swtbot']/repositories/repository[id='set-github']/url"
-           -v ${{ github.workspace }}/${{ env.DEPLOY_DIR_LOCAL }}
-           ${{ github.workspace }}/swtbot-pom.xml
+           -v file://${{ env.DEPLOY_DIR }}
+           ${{ env.SWTBOT_POM }}
 
       - name: Run Test
-        run: mvn -T 1.5C -U -B clean verify --settings ${{ github.workspace }}/.github/settings.xml -Dapplication-version="2.0.0" -Dapplication-under-test='${{ github.workspace}}/application-under-test/'
-        working-directory: java-test/org.eclipse.set.swtbot.parent
+        run: mvn -T 1.5C -U -B -f ${{ env.SWTBOT_POM }} clean verify --settings ${{ github.workspace }}/.github/settings.xml -Dapplication-under-test='${{ env.TEST_APPLICATION_DIR }}'
   
