@@ -245,9 +245,11 @@ jobs:
         if: github.ref == 'refs/heads/main'
 
   runSWTBot:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     needs: java
     steps:
+      - uses: actions/checkout@v4
+      
       - name: Trigger SWTBot Workflow
         uses: ./.github/workflows/swtbot.yml
         with:
