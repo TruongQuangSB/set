@@ -1,23 +1,10 @@
 name: SWTBot Test
 
 on:
-  # workflow_call:
-  #   inputs:
-  #     runNumber:
-  #       description: 'Run number of caller workflow'
-  #       type: string
-  #       required: true
-  #     runId:
-  #       description: 'Run id of caller workflow'
-  #       type: string
-  #       required: true
   workflow_run:
     workflows: [Build SET]
     types: 
       - completed
-    
-
-    
 
 env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -52,14 +39,9 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
           path: ${{ env.DEPLOY_DIR }}
 
-      - name: Update repo path
-        shell: bash
-        run: |
-           xmlstarlet ed --inplace \
-           -u "project/profiles/profile[id='swtbot']/repositories/repository[id='set-github']/url"
-           -v file://${{ env.DEPLOY_DIR }}
-           ${{ env.SWTBOT_POM }}
-
       - name: Run Test
-        run: mvn -T 1.5C -U -B -f ${{ env.SWTBOT_POM }} clean verify --settings ${{ github.workspace }}/.github/settings.xml -Dapplication-under-test='${{ env.TEST_APPLICATION_DIR }}'
+        run: |
+          mvn -T 1.5C -U -B -f ${{ env.SWTBOT_POM }} clean verify --settings ${{ github.workspace }}/.github/settings.xml \
+            -DrepoPath=file://${{ env.DEPLOY_DIR }} \
+            -Dapplication-under-test='${{ env.TEST_APPLICATION_DIR }}'
   
