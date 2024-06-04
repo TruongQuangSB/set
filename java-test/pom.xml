@@ -14,6 +14,7 @@
     <artifactId>org.eclipse.set.releng.parent</artifactId>
     <version>2.3.0-SNAPSHOT</version>
   </parent>
+  
   <modules>
     <module>../java/bundles/org.eclipse.set.swtbot</module>
   </modules>
@@ -360,7 +361,7 @@
       <repositories>
         <repository>
           <id>set-github</id>
-          <url>REPO_PATH</url>
+          <url>${repoPath}</url>
           <snapshots>
             <enabled>true</enabled>
             <updatePolicy>always</updatePolicy>
