@@ -23,9 +23,7 @@ jobs:
     runs-on: windows-latest
     permissions:
       contents: read
-      packages: write
-      checks: write
-      pull-requests: write
+      packages: read
     steps:
       - uses: actions/checkout@v4
       - name: Setup Java
