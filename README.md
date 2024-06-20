@@ -11,7 +11,7 @@ model based technologies, like Xtend transformations, EMF Forms and others. The
 toolbox and its technology shall be available to all members and interested
 parties. The goal is to have a common technology core for using the toolbox as
 widely accepted standalone product as well as the possibility to use its
-technology, ie. emf model, in derived custom solutions.
+technology, ie. emf model, in derived custom solutions. 
 
 * https://projects.eclipse.org/projects/technology.set
 
