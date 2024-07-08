@@ -260,6 +260,11 @@ jobs:
       
       - name: Setup Java
         uses: eclipse-set/build/.github/actions/setup-java@main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
         
       - name: Fetch SET
         uses: actions/download-artifact@v4
@@ -274,6 +279,7 @@ jobs:
           path: ${{ env.DEPLOY_DIR }}
 
       - name: Run Test
+        id: uitest
         shell: bash
         run: |
           mvn -T 1.5C -U -B -f java-test/pom.xml clean verify  \
@@ -290,12 +296,8 @@ jobs:
           token: ${{ github.token }}
 
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
       - name: Create Diff
+        if: always() && (steps.uitest.outcome == 'failure')
         shell: bash
         run: python java-test/diff.py --diffDir=java/bundles/org.eclipse.set.swtbot/target/classes/diff
 
