@@ -290,10 +290,19 @@ jobs:
           token: ${{ github.token }}
 
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Create Diff
+        shell: bash
+        run: python java-test/diff.py --diffDir=java/bundles/org.eclipse.set.swtbot/target/classes/diff
+
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action/windows@567cc7f8dcea3eba5da355f6ebc95663310d8a07 # v2.17.0
         if: always()
         with:
           check_name: "SWTBot Test"
           files: |
-            ${{ github.workspace }}/**/surefire-reports/*.xml
+            ${{ github.workspace }}/**/classes/diff/*.html
