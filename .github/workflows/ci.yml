@@ -299,9 +299,10 @@ jobs:
       - name: Create Diff
         if: always() && (steps.uitest.outcome == 'failure')
         shell: bash
+        working-directory: java-test
         run: |
           pip install Jinja2
-          python java-test/diff.py --diffDir=java/bundles/org.eclipse.set.swtbot/target/classes/diff
+          python diff.py --diffDir="${{ github.workspace }}/java/bundles/org.eclipse.set.swtbot/target/classes/diff"
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action/windows@567cc7f8dcea3eba5da355f6ebc95663310d8a07 # v2.17.0
