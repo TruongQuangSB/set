@@ -283,11 +283,13 @@ jobs:
             -Dapplication-under-test="${{ env.TEST_APPLICATION_DIR }}" \
       
       - name: Table diff
+        if: always()
         uses: truongquangsb/build/.github/actions/handle-table-diff-view@main
         with:
           branch: ${{ github.ref }}
           diff-dir: ${{ github.workspace }}/java/bundles/org.eclipse.set.swtbot/target/classes/diff
           token: ${{ github.token }}
+          pr-number: ${{ github.event.pull_request.number }}
 
 
       - name: Publish Test Results
