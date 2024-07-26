@@ -260,11 +260,6 @@ jobs:
       
       - name: Setup Java
         uses: eclipse-set/build/.github/actions/setup-java@main
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
         
       - name: Fetch SET
         uses: actions/download-artifact@v4
@@ -279,7 +274,6 @@ jobs:
           path: ${{ env.DEPLOY_DIR }}
 
       - name: Run Test
-        id: uitest
         shell: bash
         run: |
           mvn -T 1.5C -U -B -f java-test/pom.xml clean verify  \
@@ -296,18 +290,10 @@ jobs:
           token: ${{ github.token }}
 
 
-      - name: Create Diff
-        if: always() && (steps.uitest.outcome == 'failure')
-        shell: bash
-        working-directory: java-test
-        run: |
-          pip install Jinja2
-          python diff.py --diffDir="${{ github.workspace }}/java/bundles/org.eclipse.set.swtbot/target/classes/diff"
-
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action/windows@567cc7f8dcea3eba5da355f6ebc95663310d8a07 # v2.17.0
         if: always()
         with:
           check_name: "SWTBot Test"
           files: |
-            ${{ github.workspace }}/**/classes/diff/*.html
+            ${{ github.workspace }}/**/surefire-reports/*.xml
