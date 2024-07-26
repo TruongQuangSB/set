@@ -281,6 +281,14 @@ jobs:
             -Dskip-test=false \
             -Dm2-repo-path="file://${{ env.DEPLOY_DIR }}" \
             -Dapplication-under-test="${{ env.TEST_APPLICATION_DIR }}" \
+      
+      - name: Table diff
+        uses: truongquangsb/build/.github/actions/handle-table-diff-view@main
+        with:
+          branch: ${{ github.ref }}
+          diff-dir: ${{ github.workspace }}/java/bundles/org.eclipse.set.swtbot/target/classes/diff
+          token: ${{ github.token }}
+
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action/windows@567cc7f8dcea3eba5da355f6ebc95663310d8a07 # v2.17.0
