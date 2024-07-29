@@ -1,0 +1,31 @@
+name: 'TEst Create Diff'
+
+on: workflow_dispatch
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  DIFF_DIR: ${{ github.workspace }}/java-test/diff
+
+jobs:
+  create-diff-view:
+    runs-on: ubuntu-latest
+    container: ghcr.io/truongquangsb/table-diff-view:latest
+    permissions:
+      contents: write
+      checks: write
+      pull-requests: write
+      actions: read
+    steps:
+      - name: Fetch table csv
+        uses: actions/download-artifact@v4
+        with:
+          name: table-csv-225
+          path: ${{ env.DIFF_DIR }}
+
+      - name: Create diff view
+        shell: bash
+        run: |
+          python -m table-diff-view-hanlde \
+            --difDir=${{ env.DIFF_DIR }}
+            --branchName=swtbot/create-diff
+            --prNumber=13
