@@ -20,12 +20,14 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: table-csv-225
+          github-token: ${{ env.GITHUB_TOKEN }}
+          run-id: 10144685413
           path: ${{ env.DIFF_DIR }}
 
       - name: Create diff view
         shell: bash
         run: |
-          python -m table-diff-view-hanlde \
+          poetry run table-diff-view-handle
             --difDir=${{ env.DIFF_DIR }}
             --branchName=swtbot/create-diff
             --prNumber=13
