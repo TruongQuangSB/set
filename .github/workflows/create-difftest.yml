@@ -26,8 +26,9 @@ jobs:
 
       - name: Create diff view
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ls -R && \
           python -m tablediffview \
             --diffDir=./java-test/diff \
             --branchName=swtbot/create-diff \
