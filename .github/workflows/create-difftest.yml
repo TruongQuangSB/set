@@ -27,6 +27,7 @@ jobs:
       - name: Create diff view
         shell: bash
         run: |
+          ls -R && \
           python -m tablediffview \
             --diffDir=${{ env.DIFF_DIR }} \
             --branchName=swtbot/create-diff \
