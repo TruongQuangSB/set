@@ -16,6 +16,7 @@ on:
 env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   DEPLOY_DIR: ${{ github.workspace }}/java-test/m2deploy
+  DIFF_DIR: ${{ github.workspace }}/java-test/diff
   TEST_APPLICATION_DIR: ${{ github.workspace }}/java-test/application-under-test
 
 jobs:
@@ -282,20 +283,37 @@ jobs:
             -Dm2-repo-path="file://${{ env.DEPLOY_DIR }}" \
             -Dapplication-under-test="${{ env.TEST_APPLICATION_DIR }}" \
       
-      - name: Table diff
-        if: always()
-        uses: truongquangsb/build/.github/actions/handle-table-diff-view@main
+      - name: Upload csv files
+        uses: actions/upload-artifact@v4
         with:
-          branch: ${{ github.ref }}
-          diff-dir: ${{ github.workspace }}/java/bundles/org.eclipse.set.swtbot/target/classes/diff
-          token: ${{ github.token }}
-          pr-number: ${{ github.event.pull_request.number }}
+          name: table-csv-${{github.run_number}}
+          path: ${{ github.workspace}}/java/bundles/org.eclipse.set.swtbot/target/classes/diff
+          retention-days: 1
+  
+  create-diff-view:
+    runs-on: ubuntu:latest
+    needs: swtbot
+    container: truongquangsb/table-diff-view:latest
+    permissions:
+      contents: write
+      checks: write
+      pull-requests: write
+      actions: read
+    steps:
+      - name: Fetch table csv
+        uses: actions/download-artifact@v4
+        with:
+          name: table-csv-${{github.run_number}}
+          path: ${{ env.DIFF_DIR }}
+
+      - name: Create diff view
+        shell: bash
+        run: |
+          python -m table-diff-view-hanlde \
+            --difDir=${{ env.DIFF_DIR }}
+            --branchName=${{ github.ref }}
+            --prNumber=${{github.event.pull_request.number}}
 
 
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action/windows@567cc7f8dcea3eba5da355f6ebc95663310d8a07 # v2.17.0
-        if: always()
-        with:
-          check_name: "SWTBot Test"
-          files: |
-            ${{ github.workspace }}/**/surefire-reports/*.xml
+
+
