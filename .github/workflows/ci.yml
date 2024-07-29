@@ -311,7 +311,7 @@ jobs:
       - name: Create diff view
         shell: bash
         run: |
-          python -m table-diff-view-hanlde \
+          python -m table-diff-view-handle \
             --difDir=${{ env.DIFF_DIR }}
             --branchName=${{ github.ref }}
             --prNumber=${{github.event.pull_request.number}}
