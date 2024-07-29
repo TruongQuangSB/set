@@ -29,6 +29,6 @@ jobs:
         run: |
           ls -R && \
           python -m tablediffview \
-            --diffDir=${{ env.DIFF_DIR }} \
+            --diffDir=./java-test/diff \
             --branchName=swtbot/create-diff \
             --prNumber=13
