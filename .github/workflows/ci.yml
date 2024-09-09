@@ -284,12 +284,8 @@ jobs:
             -Dm2-repo-path="file://${{ env.DEPLOY_DIR }}" \
             -Dapplication-under-test="${{ env.TEST_APPLICATION_DIR }}" \
 
-      - name: Test
-        if: ${{ always() }}'
-        shell: bash
-        run: echo ${{ steps.test-steps.outcome }}
       - name: Upload csv files
-        if: ${{ steps.test-steps.outcome }} == 'failure'
+        if: steps.test-steps.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
           name: table-csv-${{github.run_number}}
