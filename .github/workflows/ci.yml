@@ -316,3 +316,10 @@ jobs:
             --difDir=.java-test/diff
             --branchName=${{ github.ref }}
             --prNumber=${{github.event.pull_request.number}}
+
+      - name: Upload diff artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: table-diff-md-${{github.run_number}}
+          path: ${{ github.workspace}}/java-test/diff/*.md
+          retention-days: 7
