@@ -289,7 +289,7 @@ jobs:
         shell: bash
         run: echo ${{ steps.test-steps.outcome }}
       - name: Upload csv files
-        if: ${{ always() }}
+        if: ${{ steps.test-steps.outcome }} == 'failure'
         uses: actions/upload-artifact@v4
         with:
           name: table-csv-${{github.run_number}}
@@ -317,7 +317,7 @@ jobs:
         shell: bash
         run: |
           python -m tablediffview \
-            --difDir=.java-test/diff \
+            --difDir=".java-test/diff" \
             --branchName=${{ github.ref }} \
             --prNumber=${{github.event.pull_request.number}} \
 
