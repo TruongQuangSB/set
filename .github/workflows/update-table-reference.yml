@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: Apply Changes
         shell: bash
-        run: python -m updatetablereference --prNumber=${{ github.event.issue.number }}
+        run: python -m updatereference --prNumber=${{ github.event.issue.number }}
       
       - name: Add comment reaction
         uses: actions/github-script@v7
