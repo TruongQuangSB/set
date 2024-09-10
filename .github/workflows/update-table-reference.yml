@@ -7,6 +7,9 @@ on:
   issue_comment:
     types: [created]
 
+env:
+  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
 jobs:
   doCommand:
     runs-on: ubuntu-latest
