@@ -1,0 +1,43 @@
+# This workflow will build the main SET application and publish it to GitHub Packages
+name: Create Diff
+
+on: 
+  workflow_dispatch:
+
+env:
+  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  DEPLOY_DIR: ${{ github.workspace }}/java-test/m2deploy
+  DIFF_DIR: ${{ github.workspace }}/java-test/diff
+  TEST_APPLICATION_DIR: ${{ github.workspace }}/java-test/application-under-test
+
+jobs:
+  create-diff-view:
+      runs-on: ubuntu-latest
+      container: ghcr.io/truongquangsb/table-diff-view:latest
+      permissions:
+        contents: write
+        checks: write
+        pull-requests: write
+        actions: read
+      steps:
+        - name: Fetch table csv
+          uses: actions/download-artifact@v4
+          with:
+            run-id: 10789538934
+            name: table-csv-260
+            path: ${{ env.DIFF_DIR }}
+  
+        - name: Create diff view
+          shell: bash
+          run: |
+            ls ${{ env.DIFF_DIR}}
+            python -m tablediffview \
+              --diffDir=${{ env.DIFF_DIR }} \
+              --branchName=${{ github.ref }} \
+              --prNumber=${{github.event.pull_request.number}} \
+        - name: Upload diff artifact
+          uses: actions/upload-artifact@v4
+          with:
+            name: table-diff-md-${{github.run_number}}
+            path: ${{ github.workspace}}/java-test/diff/*.md
+            retention-days: 7
