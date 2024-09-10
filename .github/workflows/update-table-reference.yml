@@ -13,7 +13,7 @@ env:
 jobs:
   doCommand:
     runs-on: ubuntu-latest
-    if: github.event_name == 'issue_comment' && contains(github.event.comment.body, '/update-table-reference')
+    if: ${{ github.event.issue.pull_request }} && github.event_name == 'issue_comment' && contains(github.event.comment.body, '/update-table-reference')
     container: ghcr.io/truongquangsb/update-table-reference:latest
     permissions:
       contents: write
@@ -21,6 +21,13 @@ jobs:
       pull-requests: write
       actions: read
     steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          token: ${{ env.GITHUB_TOKEN }}
+          path: "set"
+
       - name: Apply Changes
         shell: bash
         run: python -m updatereference --prNumber=${{ github.event.issue.number }}
