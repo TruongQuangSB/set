@@ -21,7 +21,7 @@ jobs:
       - name: Apply Changes
         shell: bash
         run: |
-          python -m updatereference --prNumber=${{github.event.pull_request.number}}
+          python -m updatereference --prNumber=${{ github.event.issue.number }}
       
       - name: Add comment reaction
         uses: actions/github-script@v7
