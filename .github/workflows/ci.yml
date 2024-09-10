@@ -317,7 +317,7 @@ jobs:
         run: |
           python -m tablediffview \
             --diffDir=${{ env.DIFF_DIR }} \
-            --branchName=${{ github.ref }} \
+            --branchName=${{ github.ref.head_ref }} \
             --prNumber=${{github.event.pull_request.number}} \
 
       - name: Upload diff artifact
