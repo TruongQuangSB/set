@@ -29,13 +29,11 @@ jobs:
         uses: eclipse-set/build/.github/actions/setup-asciidoctor@main
 
       - name: Build About
-        id: build-about
         run: hugo
         working-directory: web/about
         
       - name: Store artifact
         uses: actions/upload-artifact@v4
-        if: steps.build-about.outcome == 'success'
         with:
           name: about-artifact
           path: web/about/dist
@@ -278,7 +276,6 @@ jobs:
 
       - name: Run Test
         id: test-step
-        continue-on-error: true
         shell: bash
         run: |
           mvn -T 1.5C -U -B -f java-test/pom.xml clean verify  \
@@ -288,7 +285,7 @@ jobs:
             -Dapplication-under-test="${{ env.TEST_APPLICATION_DIR }}" \
 
       - name: Upload csv files
-        if: steps.test-step.outcome == 'failure'
+        if: ${{ always() }} && steps.test-step.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
           name: table-csv-${{github.run_number}}
@@ -316,7 +313,7 @@ jobs:
         shell: bash
         run: |
           python -m tablediffview \
-            --difDir=".java-test/diff" \
+            --diffDir=${{ env.DIFF_DIR }} \
             --branchName=${{ github.ref }} \
             --prNumber=${{github.event.pull_request.number}} \
 
