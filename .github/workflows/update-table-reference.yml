@@ -11,7 +11,7 @@ jobs:
   doCommand:
     runs-on: ubuntu-latest
     if: github.event_name == 'issue_comment' && contains(github.event.comment.body, '/update-table-reference')
-    container: ghcr.io/truongquangsb/updatereference:latest
+    container: ghcr.io/truongquangsb/update-table-reference:latest
     permissions:
       contents: write
       checks: write
