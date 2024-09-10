@@ -308,7 +308,10 @@ jobs:
         with:
           name: table-csv-${{github.run_number}}
           path: ${{ env.DIFF_DIR }}
-
+       
+      - name: Test
+        shell: bash
+        run: ls -R ${{ env.DIFF_DIR }}
       - name: Create diff view
         shell: bash
         run: |
