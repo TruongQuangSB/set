@@ -305,7 +305,7 @@ jobs:
   create-diff-view:
     runs-on: ubuntu-latest
     needs: swtbot
-    if: ${{ always() }} && (github.event_name == 'push' || github.event_name == 'pull_request') && needs.swtbot.outputs.result == 'failure'
+    if: needs.swtbot.outputs.result == 'failure'
     container: ghcr.io/truongquangsb/table-diff-view:latest
     permissions:
       contents: write
@@ -323,9 +323,9 @@ jobs:
         shell: bash
         run: |
           python -m tablediffview \
-            --difDir=${{ env.DIFF_DIR }}
-            --branchName=${{ github.head_ref }}
-            --prNumber=${{github.event.pull_request.number}}
+            --diffDir=${{ env.DIFF_DIR }} \
+            --branchName=${{ github.head_ref }} \
+            --prNumber=${{github.event.pull_request.number}} \
 
   update-table-reference:
     runs-on: ubuntu-latest
@@ -339,12 +339,12 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Apply Changes
         shell: bash
-        run: |
-          git config user.name 'TruongQuangSB'
-          python -m updatereference --prNumber=${{ github.event.issue.number }}
+        run: python -m updatereference --prNumber=${{ github.event.issue.number }}
       
       - name: Add comment reaction
         uses: actions/github-script@v7
