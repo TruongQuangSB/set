@@ -16,7 +16,7 @@ on:
 env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   DEPLOY_DIR: ${{ github.workspace }}/java-test/m2deploy
-  DIFF_DIR: ${{ github.workspace }}/java-test/diff
+  DIFF_DIR: java-test/diff
   TEST_APPLICATION_DIR: ${{ github.workspace }}/java-test/application-under-test
 
 jobs:
