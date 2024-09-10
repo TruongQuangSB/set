@@ -307,7 +307,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: table-csv-${{github.run_number}}
-          path: ${{ env.DIFF_DIR }}
+          path: java-test/diff
        
       - name: Test
         shell: bash
