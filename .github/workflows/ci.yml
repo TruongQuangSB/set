@@ -22,10 +22,11 @@ env:
 jobs:
   docs:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v4
-
+      - name: Test
+        shell: bash
+        run: echo ${{GITHUB_REF#refs/heads/}}
       - name: Install Asciidoctor & Hugo
         uses: eclipse-set/build/.github/actions/setup-asciidoctor@main
 
