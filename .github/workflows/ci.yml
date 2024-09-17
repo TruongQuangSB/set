@@ -24,7 +24,6 @@ env:
 jobs:
   docs:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v4
 
@@ -37,7 +36,7 @@ jobs:
           if [ "${{ github.event_name }}" == "pull_request" ]; then
             echo "BRANCH_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
           else
-            echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+            echo "BRANCH_NAME=${{github.ref}}" >> $GITHUB_ENV
             
       - name: Print Branch Name
         run: echo "The branch name is ${{env.BRANCH_NAME}}"
