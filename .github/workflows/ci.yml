@@ -25,11 +25,6 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Install Asciidoctor & Hugo
-        uses: eclipse-set/build/.github/actions/setup-asciidoctor@main
-
       - name: Get Branchname
         shell: bash
         run: |
@@ -41,17 +36,6 @@ jobs:
             
       - name: Print Branch Name
         run: echo "The branch name is ${{env.BRANCH_NAME}}"
-
-      - name: Build About
-        run: hugo
-        working-directory: web/about
-        
-      - name: Store artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: about-artifact
-          path: web/about/dist
-          retention-days: 1
 
   developerhelp:
     runs-on: ubuntu-latest
