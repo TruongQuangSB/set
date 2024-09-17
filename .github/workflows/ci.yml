@@ -31,14 +31,12 @@ jobs:
         uses: eclipse-set/build/.github/actions/setup-asciidoctor@main
 
       - name: Get Branchname
-        uses: actions/github-script@v7
-        with:
-          script: |
-            if (${{ github.event_name  == "pull_request" }}) {
-              env.BRANCH_NAME = ${{ github.head_ref }}
-            } else {
-              env.BRANCH_NAME = ${{github.ref}}
-            }
+        shell: bash
+        run: |
+            if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "BRANCH_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
+            else
+            echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
             
       - name: Print Branch Name
         run: echo "The branch name is ${{env.BRANCH_NAME}}"
