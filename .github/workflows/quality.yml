@@ -8,7 +8,7 @@ on:
     branches:
       - 'release/**'
       - 'main'
-run-name: Qualtity - ${{github.event.head_commit.message}}
+run-name: Qualtity - ${{github.event.head_commit.message ?? github.event.pull_request.title}}
 jobs:
   java-formatting:
     runs-on: ubuntu-latest
