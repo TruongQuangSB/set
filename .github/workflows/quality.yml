@@ -8,8 +8,7 @@ on:
     branches:
       - 'release/**'
       - 'main'
-
-
+run-name: Qualtity - ${{github.event.head_commit.message}}
 jobs:
   java-formatting:
     runs-on: ubuntu-latest
